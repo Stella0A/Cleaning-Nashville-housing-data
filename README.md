@@ -1,16 +1,16 @@
 # Cleaning-Nashville-housing-data
 
-### viewing the dataset
+### Viewing the dataset
 	SELECT *
 	FROM PortfolioProjects.dbo.Nashville;
 
-### converting the datetime to a date format
+### Converting the datetime to a date format
 	UPDATE Nashville
 	SET SalesDateCoverted = CONVERT(Date,SaleDate)
 	ALTER TABLE Nashville
 	ADD SalesDateCoverted Date;
 
-### fishing out where PropertyAddress is null to update it
+### Fishing out where PropertyAddress is null to update it
 	SELECT n1.ParcelID,n1.PropertyAddress,n2.ParcelID,n2.PropertyAddress, ISNULL(n1.PropertyAddress,n2.PropertyAddress)
 	FROM PortfolioProjects.dbo.Nashville n1
 	JOIN PortfolioProjects.dbo.Nashville n2
@@ -19,7 +19,7 @@
 	WHERE n1.PropertyAddress IS NULL
 
 
-### updating rows that are null with data
+### Updating rows that are null with data
 	UPDATE n1
 	SET PropertyAddress = ISNULL(n1.PropertyAddress,n2.PropertyAddress)
 	FROM PortfolioProjects.dbo.Nashville n1
@@ -30,7 +30,7 @@
 
 
 
-### splitting the property address into city and address and updating the table using the substring function
+### Splitting the property address into city and address and updating the table using the substring function
 	SELECT 
 	SUBSTRING(PropertyAddress, 1, CHARINDEX(',', PropertyAddress) -1) as Address
 	, SUBSTRING(PropertyAddress, CHARINDEX(',', PropertyAddress) +1, LEN(PropertyAddress)) as Address
@@ -48,14 +48,14 @@
 
 
 
-### splitting the property address into city and address and updating the table using the Parsename & Replace function
+### Splitting the property address into city and address and updating the table using the Parsename & Replace function
 	SELECT 
 	PARSENAME(REPLACE(OwnerAddress, ',', '.'),3) as Housing,
 	PARSENAME(REPLACE(OwnerAddress, ',', '.'),2) as City,
 	PARSENAME(REPLACE(OwnerAddress, ',', '.'),1)  as Status
 	FROM PortfolioProjects.dbo.Nashville;
 
-### updating the table
+### Updating the table
 	ALTER TABLE PortfolioProjects.dbo.Nashville
 	ADD Housing NVARCHAR(255)
 	UPDATE PortfolioProjects.dbo.Nashville
@@ -74,7 +74,7 @@
 	SELECT *
 	FROM PortfolioProjects.dbo.Nashville;
 
-### replacing the 'n' and 'y' letters with 'yes' and 'no'
+### Replacing the 'n' and 'y' letters with 'yes' and 'no'
 	SELECT DISTINCT(SoldAsVacant),COUNT(SoldAsVacant)
 	FROM PortfolioProjects.dbo.Nashville
 	GROUP BY SoldAsVacant
